@@ -8,7 +8,7 @@ export default function NotFound() {
       <p className="text-muted mb-4">
         Sorry, the page you are looking for does not exist.
       </p>
-      <a href="/" className="btn btn-primary">
+      <a href="/login" className="btn btn-primary">
         Go Home
       </a>
     </div>

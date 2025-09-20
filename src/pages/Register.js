@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import usePost from "../Hooks/PostDetails";
 import ApiRoutes from "../ApiRoutes/ApiRoutes";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/common/Loader";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +40,7 @@ export default function Register() {
       {
         onSuccess: ({ data }) => {
           toast.success("Registered successfully!");
-          navigate("/");
+          navigate("/login");
         },
         onError: (error) => {
           toast.error("Registration failed. Please try again.");
@@ -167,6 +168,7 @@ export default function Register() {
           </div>
         </div>
       </div>
+      {(registerLoading) && <Loader text={"Loading..."}/>}
     </div>
   );
 }

@@ -7,16 +7,20 @@ import JournalDetails from "./pages/JournalDetails";
 import NotFound from "./pages/NotFound";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PrivateRoute from "./components/common/PrivateRoute";
 
 function App() {
   return (
     <Router>
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/journal/:id" element={<JournalDetails />} />
+
+        <Route element={<PrivateRoute/>}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/journal/:id" element={<JournalDetails />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

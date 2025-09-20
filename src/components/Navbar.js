@@ -2,7 +2,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ModalScreen from "./common/ModalScreen";
-
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Navbar() {
 
@@ -10,13 +10,13 @@ export default function Navbar() {
   let userName = localStorage.getItem("userName") || "User";
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const queryClient = useQueryClient();
 
   const handleLogout = () => {
     
     localStorage.removeItem("token");
-    sessionStorage.clear();
-    localStorage.removeItem("userName");
-    navigate("/",{ replace: true });
+    queryClient.clear();
+    navigate("/login",{ replace: true });
   }
 
   return (
