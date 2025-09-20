@@ -18,10 +18,15 @@ api.interceptors.request.use((config) => {
 
 // Hook
 export default function usePut() {
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: async ({ endpoint, formData }) => {
       const res = await api.put(endpoint, formData);
       return res.data;
     },
   });
+
+  return {
+    ...mutation,
+    isLoading: mutation.isPending,
+  };
 }

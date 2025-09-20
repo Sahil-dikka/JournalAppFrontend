@@ -15,10 +15,15 @@ api.interceptors.request.use((config) => {
 });
 
 export default function usePost() {
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: async ({ endpoint, formData }) => {
       const res = await api.post(endpoint, formData);
       return res.data;
     },
   });
+
+  return {
+    ...mutation, // contains mutate, mutateAsync, data, error, etc.
+    isLoading: mutation.isPending, // expose as `isLoading` for clarity
+  };
 }

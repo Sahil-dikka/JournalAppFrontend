@@ -1,14 +1,15 @@
+// src/components/common/Loader.js
 import React from "react";
 
-const Loader = ({ text = "Loading..." }) => {
+export default function Loader({ text = "Loading..." }) {
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center mt-auto" style={{ height: "200px" }}>
-      <div className="spinner-border text-primary" role="status" style={{ width: "3rem", height: "3rem" }}>
-        <span className="visually-hidden">Loading...</span>
+    <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75" style={{ zIndex: 9999 }}>
+      <div className="text-center">
+        <div className="spinner-border text-primary mb-2" role="status">
+          <span className="visually-hidden">{text}</span>
+        </div>
+        <div>{text}</div>
       </div>
-      <p className="mt-3 text-secondary">{text}</p>
     </div>
   );
-};
-
-export default Loader;
+}

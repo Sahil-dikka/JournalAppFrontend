@@ -18,10 +18,15 @@ api.interceptors.request.use((config) => {
 
 // Hook
 export default function useDelete() {
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: async ({ endpoint }) => {
       const res = await api.delete(endpoint);
       return res.data;
     },
   });
+
+  return {
+    ...mutation,
+    isLoading: mutation.isPending, // keep naming consistent with usePost
+  };
 }

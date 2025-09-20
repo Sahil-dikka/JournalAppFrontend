@@ -3,54 +3,60 @@ import Image from "../assets/frontImg.jpeg";
 import TextInput from "../components/common/TextInput";
 import usePost from "../Hooks/PostDetails";
 import { useForm } from "react-hook-form";
-import ApiRoutes from "../ApiRoutes/ApiRoutes"; // <-- fixed import
+import ApiRoutes from "../ApiRoutes/ApiRoutes";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import Loader from "../components/common/Loader";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const { register, handleSubmit } = useForm(); // <-- get register
-
-  const navigate = useNavigate()
-
+  const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
 
   const { isLoading: loginLoading, mutate: fetchLoginData } = usePost();
 
   const LoginSubmit = (data) => {
-    console.log("form data",data);
     if (!data?.userName || !data?.password) {
-      alert("Please enter both userName and password.");
+      setError("Please enter both username and password.");
       return;
     }
+
     const requestBody = {
       userName: data?.userName,
       password: data?.password,
     };
+
     fetchLoginData(
       {
         endpoint: ApiRoutes.POST.LOGIN,
         formData: requestBody,
       },
       {
-        onSuccess: ( data ) => {
+        onSuccess: (res) => {
           toast.success("Login successful!");
-          console.log("response",data);
-          localStorage.setItem("token", data);
+          localStorage.setItem("token", res); // make sure `res` is actually the token
           localStorage.setItem("userName", requestBody.userName);
           navigate("/dashboard");
         },
-        onError: (error) => {
+        onError: () => {
+          setError("Invalid username or password.");
           toast.error("Login failed. Please check your credentials.");
+        },
       }
-    }
     );
   };
 
-
+  console.log("Render Login Component", loginLoading);
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light position-relative">
+      {/* Overlay Loader */}
+      {loginLoading && (
+        
+          <Loader text="Logging in..." />
+        
+      )}
+
       <div
         className="card shadow d-flex flex-row overflow-hidden"
         style={{ width: "800px", height: "500px" }}
@@ -70,30 +76,27 @@ export default function Login() {
           <div className="w-100" style={{ maxWidth: "300px" }}>
             <h3 className="text-center mb-4">Login</h3>
 
-            {error && (
-              <div className="alert alert-danger py-2">{error}</div>
-            )}
+            {error && <div className="alert alert-danger py-2">{error}</div>}
 
             <form onSubmit={handleSubmit(LoginSubmit)}>
               {/* Username */}
               <TextInput
-                label="userName"
+                label="Username"
                 id="username"
-                {...register("userName")} // <-- register input
+                {...register("userName")}
                 required
               />
 
-              {/* Password with inside-eye button */}
+              {/* Password with eye toggle */}
               <div className="form-floating mb-3 position-relative">
                 <TextInput
                   label="Password"
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  {...register("password")} // <-- register input
+                  {...register("password")}
                   required
                   style={{ paddingRight: "2.5rem" }}
                 />
-                {/* Eye button inside input */}
                 <span
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
@@ -109,8 +112,12 @@ export default function Login() {
                 </span>
               </div>
 
-              <button type="submit" className="btn btn-primary w-100">
-                Login
+              <button
+                type="submit"
+                className="btn btn-primary w-100"
+                disabled={loginLoading}
+              >
+                {loginLoading ? "Please wait..." : "Login"}
               </button>
             </form>
 

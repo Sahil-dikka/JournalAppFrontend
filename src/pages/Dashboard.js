@@ -21,7 +21,7 @@ export default function Dashboard() {
   } = useGet(ApiRoutes.GET.GET_JOURNALS, { enabled: true });
 
   const deleteEndpoint = ApiRoutes.DELETE.DELETE_JOURNAL;
-  const { mutate: deleteJournal } = useDelete();
+  const { mutate: deleteJournal , isLoading: isDeleting } = useDelete();
 
   const handleOpenModal = (journal) => {
     setSelectedJournal(journal);
@@ -60,7 +60,8 @@ export default function Dashboard() {
 
       {/* Loader overlay */}
 
-      <div className={`d-flex flex-wrap justify-content-center ${isJournalsLoading ? "opacity-50" : ""}`}>
+      {journalData ? 
+        <div className={`d-flex flex-wrap justify-content-center ${isJournalsLoading ? "opacity-50" : ""}`}>
         {journalData &&
           journalData.map((journal) => (
             <JournalCard
@@ -71,7 +72,16 @@ export default function Dashboard() {
               onDeleteClick={() => handleOpenModal(journal)}
             />
           ))}
-      </div>
+      </div> :
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
+          <div className="alert alert-info text-center shadow-sm w-75" role="alert">
+            <h5 className="mb-2">No Journals Found</h5>
+            <p className="mb-3">Looks like you haven’t created any journals yet.</p>
+            
+          </div>
+        </div>
+      }
+      
 
       {isModalOpen && (
         <ModalScreen
@@ -83,7 +93,7 @@ export default function Dashboard() {
         />
       )}
 
-      {isJournalsLoading && <Loader text={"Loading..."}/>}
+      {(isJournalsLoading || isDeleting) && <Loader text={"Loading..."}/>}
     </div>
   );
 }
