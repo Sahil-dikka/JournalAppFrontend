@@ -9,7 +9,7 @@ export default function JournalDetails() {
             <Navbar/>
 
         </div>
-      <h1>Journal Details</h1>
+      
 
       <JournalForm/>
       {/* Display journal details here */}
